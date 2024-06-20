@@ -1,0 +1,6 @@
+/* This is a css module that is scoped to any component that imports it */
+
+.card {
+    padding: 1rem;
+    border: 1px solid #ccc;
+}
