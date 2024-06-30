@@ -37,12 +37,14 @@ const UserTable = async ({ sortOrder }: Props) => {
           </th>
         </tr>
       </thead>
-      {sortedUsers.map((user) => (
-        <tr key={user.id}>
-          <td>{user.name}</td>
-          <td>{user.email}</td>
-        </tr>
-      ))}
+      <tbody>
+        {sortedUsers.map((user) => (
+          <tr key={user.id}>
+            <td>{user.name}</td>
+            <td>{user.email}</td>
+          </tr>
+        ))}
+      </tbody>
     </table>
   );
 };
