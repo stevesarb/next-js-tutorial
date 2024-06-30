@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import schema from "./schema"
 import prisma from "@/prisma/client"
 
 // NOTE: we are not using NextRequest in this function, so you would think that we don't need it.
@@ -18,10 +19,29 @@ export async function POST(request: NextRequest) {
     // the request.json() function returns a promise, so we await it.
     // Because we are awaiting in this function, it must be async
     const body = await request.json();
+    const validation = schema.safeParse(body);
 
     // validate that the request does include a name property
-    if (!body.name)
+    if (!validation.success)
         return NextResponse.json({ error: "Name is required" }, { status: 400 });
 
-    return NextResponse.json({ id: 1, name: body.name }, { status: 201 });
+    // validate that the user doesn't already exist in DB
+    const user = await prisma.user.findUnique({
+        where: {
+            email: body.email
+        }
+    })
+
+    if (user)
+        NextResponse.json({ error: "User already exists"}, { status: 400 });
+
+    // Create a new user
+    const newUser = await prisma.user.create({
+        data: {
+            name: body.name,
+            email: body.email
+        }
+    })
+
+    return NextResponse.json( newUser, { status: 201 });
 }
