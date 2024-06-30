@@ -1,13 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
+import prisma from "@/prisma/client"
 
 // NOTE: we are not using NextRequest in this function, so you would think that we don't need it.
 //       However, if we do not include NextRequest, the client will cache this data and next time
 //       this request is made, it will not actually get new data
-export function GET(request: NextRequest) {
-    return NextResponse.json([
-        { id: 1, name: "Steven" },
-        { id: 2, name: "Mosh" }
-    ])
+export async function GET(request: NextRequest) {
+
+    // get all users from DB
+    const users = await prisma.user.findMany();
+
+    return NextResponse.json(users)
 }
 
 // Creating a user
