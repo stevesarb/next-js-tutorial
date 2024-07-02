@@ -1,6 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { sort } from "fast-sort";
+import DeleteButton from "../components/DeleteButton";
 
 interface User {
   id: number;
@@ -18,7 +19,7 @@ const UserTable = async ({ sortOrder }: Props) => {
   // Also, fetch will automatically cache the data returned in the file system
   // for quicker/easier access later if the same data is requested again.
   // Pass an object as an optional secondary parameter to configure caching behavior.
-  const res = await fetch("https://jsonplaceholder.typicode.com/users");
+  const res = await fetch("http://localhost:3000/api/users", { cache: "no-store" });
   const users: User[] = await res.json();
 
   const sortedUsers = sort(users).asc(
@@ -35,6 +36,9 @@ const UserTable = async ({ sortOrder }: Props) => {
           <th>
             <Link href="/users?sortOrder=email">Email</Link>
           </th>
+          <th>
+            Delete
+          </th>
         </tr>
       </thead>
       <tbody>
@@ -42,6 +46,7 @@ const UserTable = async ({ sortOrder }: Props) => {
           <tr key={user.id}>
             <td>{user.name}</td>
             <td>{user.email}</td>
+            <td><DeleteButton id={user.id}/></td>
           </tr>
         ))}
       </tbody>

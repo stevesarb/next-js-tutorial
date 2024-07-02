@@ -54,13 +54,6 @@ export async function PUT(request: NextRequest, { params: { id } }: Props) {
 
 // Deleting a user
 export async function DELETE(request: NextRequest, { params: { id } }: Props) {
-  const body = await request.json();
-
-  const validation = schema.safeParse(body);
-
-  // validate request body
-  if (!validation.success)
-    return NextResponse.json(validation.error.errors, { status: 400 });
 
   // make sure user exists
   const user = await prisma.user.findUnique({
